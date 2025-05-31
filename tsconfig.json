@@ -2,14 +2,19 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
+    "jsx": "react-native", // Importante para React Native
+    "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./app/*"] // Seu alias de caminho existente
     }
+    // Você pode adicionar outras compilerOptions específicas aqui, se necessário.
+    // Muitas opções já são herdadas de "expo/tsconfig.base".
   },
   "include": [
     "**/*.ts",
-    "**/*.tsx"
-  ]
+    "**/*.tsx",
+    ".expo/types/**/*.ts", // Importante para a geração de tipos do Expo
+    "expo-env.d.ts" // Para tipos específicos do ambiente
+  ],
+  "exclude": ["node_modules"]
 }

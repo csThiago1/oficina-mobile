@@ -1,45 +1,66 @@
-import React from 'react'
-import { NavigationContainer } from '@react-navigation/native'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { useAuth } from '../contexts/AuthContext'
-import { ActivityIndicator, View } from 'react-native'
-import HomeScreen from '../screens/HomeScreen'
-import LoginScreen from '../screens/LoginScreen'
-import OSListScreen from '../screens/OSListScreen'
-import OSFormScreen from '../screens/OSFormScreen' // próxima etapa
-import OSDetailScreen from '../screens/OSDetailScreen'
-import ChecklistEntradaScreen from '../screens/ChecklistEntradaScreen'
-import ChecklistVisualScreen from '../screens/ChecklistVisualScreen'
+import React from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { NavigationContainer } from "@react-navigation/native";
+import { useAuth } from "../contexts/AuthContext";
+import { RootStackParamList } from "../types/navigation";
+import LoginScreen from "../screens/LoginScreen";
+import HomeScreen from "../screens/HomeScreen";
+import OSListScreen from "../screens/OSListScreen";
+import OSFormScreen from "../screens/OSFormScreen";
+import OSDetailScreen from "../screens/OSDetailScreen";
+import ChecklistEntradaScreen from "../screens/ChecklistEntradaScreen";
+import ChecklistVisualScreen from "../screens/ChecklistVisualScreen";
 
-
-
-const Stack = createNativeStackNavigator()
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function Routes() {
-  const { user, loading } = useAuth()
+  const { user, loading } = useAuth();
 
   if (loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color="#000" />
-      </View>
-    )
+    return null;
   }
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator>
         {user ? (
-          <Stack.Screen name="Home" component={OSListScreen} />
+          // Rotas autenticadas
+          <>
+            <Stack.Screen
+              name="ListaOS"
+              component={OSListScreen}
+              options={{ title: "Ordens de Serviço" }}
+            />
+            <Stack.Screen
+              name="NovaOS"
+              component={OSFormScreen}
+              options={{ title: "Nova OS" }}
+            />
+            <Stack.Screen
+              name="OSDetail"
+              component={OSDetailScreen}
+              options={{ title: "Detalhes da OS" }}
+            />
+            <Stack.Screen
+              name="ChecklistEntrada"
+              component={ChecklistEntradaScreen}
+              options={{ title: "Checklist de Entrada" }}
+            />
+            <Stack.Screen
+              name="ChecklistVisual"
+              component={ChecklistVisualScreen}
+              options={{ title: "Visualizar Checklist" }}
+            />
+          </>
         ) : (
-          <Stack.Screen name="Login" component={LoginScreen} />
+          // Rotas públicas (não autenticadas)
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{ headerShown: false }}
+          />
         )}
-        <Stack.Screen name="ListaOS" component={OSListScreen} />
-        <Stack.Screen name="NovaOS" component={OSFormScreen} />
-        <Stack.Screen name="OSDetail" component={OSDetailScreen} />
-        <Stack.Screen name="ChecklistEntrada" component={ChecklistEntradaScreen} />
-        <Stack.Screen name="ChecklistVisual" component={ChecklistVisualScreen} />
       </Stack.Navigator>
     </NavigationContainer>
-  )
+  );
 }

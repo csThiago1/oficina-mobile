@@ -1,21 +1,22 @@
-import React, { useState } from 'react'
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native'
-import { OrdemServico } from '../types/os'
-import { addOS } from '../storage/osStorage'
-import { useNavigation } from '@react-navigation/native'
-import 'react-native-get-random-values'
-import { v4 as uuidv4 } from 'uuid'
+import React, { useState } from "react";
+import { View, Text, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { OrdemServico } from "../types/os";
+import { addOS } from "../storage/osStorage";
+import { useNavigation } from "@react-navigation/native";
+import "react-native-get-random-values";
+import { v4 as uuidv4 } from "uuid";
 
 export default function OSFormScreen() {
-  const navigation = useNavigation()
-  const [cliente, setCliente] = useState('')
-  const [veiculo, setVeiculo] = useState('')
-  const [descricao, setDescricao] = useState('')
+  const navigation = useNavigation();
+  const [cliente, setCliente] = useState("");
+  const [veiculo, setVeiculo] = useState("");
+  const [descricao, setDescricao] = useState("");
+  const [placa, setPlaca] = useState("");
 
   const handleSalvar = async () => {
-    if (!cliente || !veiculo || !descricao) {
-      Alert.alert('Preencha todos os campos!')
-      return
+    if (!cliente || !veiculo || !descricao || !placa) {
+      Alert.alert("Preencha todos os campos!");
+      return;
     }
 
     const novaOS: OrdemServico = {
@@ -23,13 +24,14 @@ export default function OSFormScreen() {
       cliente,
       veiculo,
       descricao,
+      placa,
       dataCriacao: new Date().toISOString(),
-      status: 'aberta',
-    }
+      status: "aberta",
+    };
 
-    await addOS(novaOS)
-    navigation.goBack()
-  }
+    await addOS(novaOS);
+    navigation.goBack();
+  };
 
   return (
     <View style={styles.container}>
@@ -48,6 +50,12 @@ export default function OSFormScreen() {
         style={styles.input}
       />
       <TextInput
+        placeholder="Placa"
+        value={placa}
+        onChangeText={setPlaca}
+        style={styles.input}
+      />
+      <TextInput
         placeholder="Descrição"
         value={descricao}
         onChangeText={setDescricao}
@@ -57,17 +65,17 @@ export default function OSFormScreen() {
 
       <Button title="Salvar OS" onPress={handleSalvar} />
     </View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20 },
-  titulo: { fontSize: 20, fontWeight: 'bold', marginBottom: 20 },
+  titulo: { fontSize: 20, fontWeight: "bold", marginBottom: 20 },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     marginBottom: 15,
     padding: 10,
     borderRadius: 5,
   },
-})
+});
